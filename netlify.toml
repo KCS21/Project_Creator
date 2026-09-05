@@ -1,0 +1,30 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# ---------------------------------------------------------------
+# 보안 헤더
+#  - CSP: 스크립트·스타일은 이 사이트 파일만, API 호출은 Google 생성형 API만 허용.
+#    (내 키 모드에서 브라우저가 Google로 직접 호출하므로 connect-src에 포함)
+#  - 인라인 <script>/<style>과 onclick 속성을 쓰지 않았기 때문에
+#    'unsafe-inline' 없이도 앱이 정상 동작한다. 코드 수정 시 이 원칙을 유지할 것.
+# ---------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/ai-catalog.js"
+  [headers.values]
+    Cache-Control = "public, max-age=600"
